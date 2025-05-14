@@ -36,7 +36,13 @@ let User;
 
 function initialize() {
     return new Promise((resolve, reject) => {
-        let db = mongoose.createConnection(process.env.MONGO_URI); // ← USE ENV VARIABLE
+        let db = mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  ssl: true,
+  tlsInsecure: false
+});
+ // ← USE ENV VARIABLE
 
         db.on('error', (err) => {
             reject(err);
