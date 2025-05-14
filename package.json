@@ -2,8 +2,10 @@
   "name": "web322-app",
   "version": "1.0.0",
   "description": "WEB322-APP",
+  "main": "server.js",
   "scripts": {
-    "dev": "vercel dev"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "Jhonatan Lopez Olguin",
   "license": "ISC",

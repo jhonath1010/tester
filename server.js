@@ -301,21 +301,14 @@ app.use((req, res) => {
 });
 
 // Initialize services and start server
-// Initialize services and export app for Vercel
 storeService.initialize()
     .then(authData.initialize)
     .then(() => {
-        if (process.env.NODE_ENV !== 'production') {
-            app.listen(HTTP_PORT, () => {
-                console.log("Express http server listening on port", HTTP_PORT);
-            });
-        }
+        app.listen(HTTP_PORT, () => {
+            console.log("Express http server listening on port", HTTP_PORT);
+        });
     })
     .catch((err) => {
         console.error('Error initializing data:', err);
         process.exit(1);
     });
-
-const serverless = require('serverless-http');
-module.exports = app;
-module.exports.handler = serverless(app);
