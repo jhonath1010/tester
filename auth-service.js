@@ -12,6 +12,8 @@
 * GitHub Repository URL: https://github.com/jhonath1010/web322-app
 ********************************************************************************/
 
+require("dotenv").config(); // Add this line if you're using a .env file locally
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
@@ -35,11 +37,13 @@ let User;
 
 function initialize() {
     return new Promise((resolve, reject) => {
-        let db = mongoose.createConnection("mongodb+srv://jhonath1010:Z1HzpXtwv5XmtWxN@serverdb.uwnrpwm.mongodb.net/?retryWrites=true&w=majority&appName=serverdb");
+        // Use the environment variable for the MongoDB URI
+        const db = mongoose.createConnection(process.env.MONGODB_URI);
 
         db.on('error', (err) => {
             reject(err);
         });
+
         db.once('open', () => {
             User = db.model("users", userSchema);
             resolve();
@@ -54,7 +58,6 @@ function registerUser(userData) {
         } else {
             bcrypt.hash(userData.password, 10)
                 .then(hash => {
-
                     let newUser = new User({
                         userName: userData.userName,
                         password: hash,
@@ -63,9 +66,7 @@ function registerUser(userData) {
                     });
 
                     newUser.save()
-                        .then(() => {
-                            resolve();
-                        })
+                        .then(() => resolve())
                         .catch((err) => {
                             if (err.code === 11000) {
                                 reject("User Name already taken");
@@ -74,7 +75,7 @@ function registerUser(userData) {
                             }
                         });
                 })
-                .catch(err => {
+                .catch(() => {
                     reject("There was an error encrypting the password");
                 });
         }
@@ -90,23 +91,19 @@ function checkUser(userData) {
                 } else {
                     bcrypt.compare(userData.password, users[0].password)
                         .then((result) => {
-                            if (result === false) {
+                            if (!result) {
                                 reject(`Incorrect Password for user: ${userData.userName}`);
                             } else {
-
                                 users[0].loginHistory.push({
                                     dateTime: new Date().toString(),
                                     userAgent: userData.userAgent
                                 });
 
-
                                 User.updateOne(
                                     { userName: users[0].userName },
                                     { $set: { loginHistory: users[0].loginHistory } }
                                 )
-                                    .then(() => {
-                                        resolve(users[0]);
-                                    })
+                                    .then(() => resolve(users[0]))
                                     .catch((err) => {
                                         reject(`There was an error verifying the user: ${err}`);
                                     });
