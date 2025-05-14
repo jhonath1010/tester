@@ -40,7 +40,7 @@ function initialize() {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   ssl: true,
-  tlsInsecure: false
+  tlsInsecure: true
 });
  // ← USE ENV VARIABLE
 
