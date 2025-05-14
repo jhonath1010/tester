@@ -1,0 +1,56 @@
+<div class="row">
+  <section class="main col-md-9">
+      <% if (data.item || (data.items && data.items.length> 0)) { %>
+          <article>
+              <% // Use the specific item if available, otherwise use the first item from items array const
+                  displayItem=data.item || data.items[0]; %>
+                  <h2>
+                      <%= displayItem.title %>
+                  </h2>
+                  <img src="<%= displayItem.featureImage %>" alt="<%= displayItem.title %>" style="width:250px" />
+                  <br /><br />
+                  <%= displayItem.description %>
+                      <br /><br />
+                      <strong>Category:</strong>
+                      <%= displayItem.category %><br />
+                          <strong>Price:</strong> $<%= displayItem.price %><br />
+                              <strong>Last Updated:</strong>
+                              <%= displayItem.postDate %>
+          </article>
+          <% } else { %>
+              <div class="col-md-12 text-center">
+                  <h2>
+                      <%= data.message %>
+                  </h2>
+                  <p>Please try another Post / Category</p>
+              </div>
+              <% } %>
+  </section>
+  <aside class="col-md-3">
+      <% if (data.items && data.items.length> 0) { %>
+          <h4>Items</h4>
+          <ul class="list-group">
+              <% data.items.forEach(item=> { %>
+                  <li class="list-group-item">
+                      <a href='/shop/<%= item.id %>'>
+                          <%= item.title %>
+                      </a>
+                  </li>
+                  <% }); %>
+          </ul>
+          <% } %>
+
+              <% if (data.categories && data.categories.length> 0) { %>
+                  <h4>Categories</h4>
+                  <ul class="list-group">
+                      <% data.categories.forEach(category=> { %>
+                          <li class="list-group-item">
+                              <a href='/shop?category=<%= category.id %>'>
+                                  <%= category.category %>
+                              </a>
+                          </li>
+                          <% }); %>
+                  </ul>
+                  <% } %>
+  </aside>
+</div>
